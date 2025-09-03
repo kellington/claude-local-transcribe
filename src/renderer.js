@@ -122,26 +122,15 @@ class TranscriptionApp {
                 .replace(/\./g, '-')
                 .slice(0, 19);
             
-            // Save as WebM first, then convert to MP3
-            const tempFilename = `${timestamp}.webm`;
-            const finalFilename = `${timestamp}.mp3`;
+            // Save as WebM directly (no conversion needed)
+            const filename = `${timestamp}.webm`;
             const transcriptionsDir = await ipcRenderer.invoke('get-transcriptions-dir');
-            const tempFilePath = path.join(transcriptionsDir, tempFilename);
-            const audioFilePath = path.join(transcriptionsDir, finalFilename);
+            const audioFilePath = path.join(transcriptionsDir, filename);
             
             // Save the recorded blob
             const arrayBuffer = await audioBlob.arrayBuffer();
             const buffer = Buffer.from(arrayBuffer);
-            fs.writeFileSync(tempFilePath, buffer);
-            
-            // Convert to MP3 using FFmpeg
-            this.updateStatus('Converting audio...');
-            await this.convertToMp3(tempFilePath, audioFilePath);
-            
-            // Clean up temp file
-            if (fs.existsSync(tempFilePath)) {
-                fs.unlinkSync(tempFilePath);
-            }
+            fs.writeFileSync(audioFilePath, buffer);
             
             // Send to Python for transcription
             this.updateStatus('Transcribing...');
@@ -154,36 +143,9 @@ class TranscriptionApp {
             
         } catch (error) {
             console.error('Error processing recording:', error);
-            this.updateStatus('Error: Failed to process recording');
+            console.error('Error stack:', error.stack);
+            this.updateStatus(`Error: Failed to process recording - ${error.message}`);
         }
-    }
-    
-    async convertToMp3(inputPath, outputPath) {
-        return new Promise((resolve, reject) => {
-            const { spawn } = require('child_process');
-            
-            const ffmpeg = spawn('ffmpeg', [
-                '-i', inputPath,
-                '-acodec', 'mp3',
-                '-ab', '128k',
-                '-ar', '44100',
-                '-ac', '1',
-                '-y',
-                outputPath
-            ]);
-            
-            ffmpeg.on('close', (code) => {
-                if (code === 0) {
-                    resolve();
-                } else {
-                    reject(new Error(`FFmpeg conversion failed with code ${code}`));
-                }
-            });
-            
-            ffmpeg.on('error', (error) => {
-                reject(error);
-            });
-        });
     }
     
     

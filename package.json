@@ -1,6 +1,6 @@
 {
   "name": "echodown",
-  "version": "1.250902",
+  "version": "1.0.0",
   "description": "EchoDown - Local audio transcription app using OpenAI Whisper",
   "main": "src/main.js",
   "scripts": {
@@ -35,9 +35,14 @@
     "files": [
       "src/**/*",
       "python/**/*",
+      "python_env/**/*",
       "requirements.txt",
       "node_modules/**/*",
       "PRD/images/**/*"
+    ],
+    "asarUnpack": [
+      "python/**/*",
+      "python_env/**/*"
     ],
     "mac": {
       "target": "dmg",
