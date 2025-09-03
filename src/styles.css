@@ -1,0 +1,246 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #333;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.app-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-header {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.app-header h1 {
+    color: white;
+    font-size: 24px;
+    font-weight: 300;
+}
+
+.main-content {
+    flex: 1;
+    padding: 40px 30px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.recording-section {
+    text-align: center;
+}
+
+.record-button-container {
+    margin-bottom: 20px;
+}
+
+.record-button {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(145deg, #ff6b6b, #ee5a52);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(238, 90, 82, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.record-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(238, 90, 82, 0.4);
+}
+
+.record-button.recording {
+    background: linear-gradient(145deg, #51cf66, #40c057);
+    box-shadow: 0 8px 25px rgba(64, 192, 87, 0.3);
+    animation: pulse 2s infinite;
+}
+
+.record-button.processing {
+    background: linear-gradient(145deg, #ffd43b, #fab005);
+    box-shadow: 0 8px 25px rgba(250, 176, 5, 0.3);
+    cursor: not-allowed;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.record-icon {
+    font-size: 32px;
+}
+
+.record-text {
+    font-weight: 500;
+}
+
+.status-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.status {
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.timer {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 24px;
+    font-weight: 300;
+    font-family: 'Courier New', monospace;
+}
+
+.hidden {
+    display: none;
+}
+
+.transcription-section {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.transcription-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.transcription-header h2 {
+    color: #333;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.transcription-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.action-button {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: white;
+    color: #666;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.action-button:hover {
+    background: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+.transcription-result {
+    min-height: 150px;
+    padding: 20px;
+    border: 2px dashed #e9ecef;
+    border-radius: 8px;
+    background: #f8f9fa;
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+.transcription-result .placeholder {
+    color: #adb5bd;
+    text-align: center;
+    font-style: italic;
+}
+
+.transcription-result.has-content {
+    border: 2px solid #e9ecef;
+    background: white;
+    color: #333;
+}
+
+.recent-section {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.recent-section h3 {
+    color: #333;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.recent-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.recent-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border-bottom: 1px solid #e9ecef;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.recent-item:hover {
+    background: #f8f9fa;
+}
+
+.recent-item:last-child {
+    border-bottom: none;
+}
+
+.recent-filename {
+    font-weight: 500;
+    color: #495057;
+}
+
+.recent-date {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.loading {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 20px;
+}
+
+.error {
+    color: #dc3545;
+    text-align: center;
+    padding: 20px;
+}

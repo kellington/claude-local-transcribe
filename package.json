@@ -1,0 +1,48 @@
+{
+  "name": "echodown",
+  "version": "1.250902",
+  "description": "EchoDown - Local audio transcription app using OpenAI Whisper",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder",
+    "setup-python": "python3 -m pip install -r requirements.txt"
+  },
+  "keywords": [
+    "transcription",
+    "whisper",
+    "audio",
+    "local",
+    "electron"
+  ],
+  "author": "Rob",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^27.0.0",
+    "electron-builder": "^24.0.0"
+  },
+  "dependencies": {
+    "node-record-lpcm16": "^1.0.1"
+  },
+  "build": {
+    "appId": "com.echodown.app",
+    "productName": "EchoDown",
+    "icon": "PRD/images/EchoDown_logo_transparent_hires.png",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "python/**/*",
+      "requirements.txt",
+      "node_modules/**/*",
+      "PRD/images/**/*"
+    ],
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.productivity",
+      "extendInfo": "build/Info.plist"
+    }
+  }
+}

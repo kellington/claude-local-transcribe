@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EchoDown</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>EchoDown</h1>
+        </header>
+        
+        <main class="main-content">
+            <div class="recording-section">
+                <div class="record-button-container">
+                    <button id="recordButton" class="record-button">
+                        <span class="record-icon">🎤</span>
+                        <span class="record-text">Record</span>
+                    </button>
+                </div>
+                
+                <div class="status-container">
+                    <div id="status" class="status">Ready</div>
+                    <div id="timer" class="timer hidden">0:00</div>
+                </div>
+            </div>
+            
+            <div class="transcription-section">
+                <div class="transcription-header">
+                    <h2>Transcription</h2>
+                    <div class="transcription-actions hidden" id="transcriptionActions">
+                        <button id="copyButton" class="action-button">Copy</button>
+                        <button id="openFolderButton" class="action-button">Open Folder</button>
+                    </div>
+                </div>
+                
+                <div id="transcriptionResult" class="transcription-result">
+                    <div class="placeholder">Your transcription will appear here...</div>
+                </div>
+            </div>
+            
+            <div class="recent-section">
+                <h3>Recent Transcriptions</h3>
+                <div id="recentList" class="recent-list">
+                    <div class="loading">Loading recent transcriptions...</div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="renderer.js"></script>
+</body>
+</html>

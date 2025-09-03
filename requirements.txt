@@ -1,0 +1,5 @@
+whisper-timestamped
+torch
+torchaudio
+librosa
+certifi
