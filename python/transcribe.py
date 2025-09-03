@@ -12,17 +12,34 @@ import certifi
 os.environ['REQUESTS_CA_BUNDLE'] = certifi.where()
 os.environ['SSL_CERT_FILE'] = certifi.where()
 
+# Add common FFmpeg locations to PATH for audio processing
+ffmpeg_paths = [
+    '/opt/homebrew/bin',  # Homebrew on Apple Silicon
+    '/usr/local/bin',     # Homebrew on Intel
+    '/usr/bin'            # System default
+]
+
+current_path = os.environ.get('PATH', '')
+for ffmpeg_path in ffmpeg_paths:
+    if ffmpeg_path not in current_path:
+        current_path = f"{ffmpeg_path}:{current_path}"
+
+os.environ['PATH'] = current_path
+
 # Create an unverified SSL context as fallback
 ssl._create_default_https_context = ssl._create_unverified_context
 
 def get_audio_duration(audio_file_path):
-    """Get audio duration using librosa"""
+    """Get audio duration using librosa with fallback"""
     try:
+        # Try loading with librosa first
         y, sr = librosa.load(audio_file_path)
         duration = librosa.get_duration(y=y, sr=sr)
         return duration
-    except:
-        return 0.0
+    except Exception as e:
+        print(f"Warning: Could not get duration with librosa: {e}", file=sys.stderr)
+        # Fallback: return a default duration or try alternative method
+        return 60.0  # Default 1 minute
 
 def transcribe_audio(audio_file_path):
     try:
@@ -44,7 +61,15 @@ def transcribe_audio(audio_file_path):
         
         # Transcribe the audio file
         print("Transcribing audio...", file=sys.stderr)
-        result = whisper.transcribe(model, audio_file_path)
+        print(f"Audio file path: {audio_file_path}", file=sys.stderr)
+        print(f"Audio file exists: {os.path.exists(audio_file_path)}", file=sys.stderr)
+        
+        try:
+            result = whisper.transcribe(model, audio_file_path)
+        except Exception as e:
+            print(f"Transcription failed with original file: {e}", file=sys.stderr)
+            print("This might be due to missing FFmpeg or unsupported format", file=sys.stderr)
+            raise e
         
         # Get transcription text and detected language
         transcription_text = result["text"].strip()

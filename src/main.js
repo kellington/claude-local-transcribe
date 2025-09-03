@@ -119,8 +119,21 @@ app.on('window-all-closed', () => {
 
 ipcMain.handle('transcribe-audio', async (event, audioFilePath) => {
   return new Promise((resolve, reject) => {
-    const pythonScript = path.join(__dirname, '..', 'python', 'transcribe.py');
-    const pythonProcess = spawn('python3', [pythonScript, audioFilePath]);
+    // Handle both development and packaged app paths
+    let pythonExecutable, pythonScript;
+    
+    if (app.isPackaged) {
+      // In packaged app, use bundled Python environment
+      pythonExecutable = path.join(process.resourcesPath, 'app.asar.unpacked', 'python_env', 'bin', 'python3');
+      pythonScript = path.join(process.resourcesPath, 'app.asar.unpacked', 'python', 'transcribe.py');
+    } else {
+      // In development, use local virtual environment if it exists, otherwise system python
+      const localPython = path.join(__dirname, '..', 'python_env', 'bin', 'python3');
+      pythonExecutable = fs.existsSync(localPython) ? localPython : 'python3';
+      pythonScript = path.join(__dirname, '..', 'python', 'transcribe.py');
+    }
+    
+    const pythonProcess = spawn(pythonExecutable, [pythonScript, audioFilePath]);
     
     let output = '';
     let errorOutput = '';
@@ -134,10 +147,15 @@ ipcMain.handle('transcribe-audio', async (event, audioFilePath) => {
     });
     
     pythonProcess.on('close', (code) => {
+      console.log(`Python script path: ${pythonScript}`);
+      console.log(`Python process exit code: ${code}`);
+      console.log(`Python stdout: ${output}`);
+      console.log(`Python stderr: ${errorOutput}`);
+      
       if (code === 0) {
         resolve(output.trim());
       } else {
-        reject(new Error(errorOutput || `Python process exited with code ${code}`));
+        reject(new Error(`Python process failed (code ${code}): ${errorOutput || 'No error details'}`));
       }
     });
   });
